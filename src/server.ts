@@ -30,6 +30,21 @@ app.use(express.text({ type: "text/html", limit: "6mb" }));
 // Use routes
 app.use("/", router);
 
+// Catch-all route for debugging unmatched requests
+app.use((req, res) => {
+  console.log(
+    `[${new Date().toISOString()}] Unmatched route: ${req.method} ${req.url}`
+  );
+  console.log(
+    `[${new Date().toISOString()}] Available routes: /healthz, /test, /render`
+  );
+  res.status(404).json({
+    error: "Route not found",
+    message: `No handler found for ${req.method} ${req.url}`,
+    availableRoutes: ["/healthz", "/test", "/render"],
+  });
+});
+
 // Simple shutdown
 process.on("SIGTERM", (): void => {
   console.log(

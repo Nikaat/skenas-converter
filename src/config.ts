@@ -26,20 +26,7 @@ const config: Config = {
     "--disable-gpu",
     "--disable-software-rasterizer",
   ],
-  pdfDefaults: {
-    format: "A5",
-    printBackground: true,
-    preferCSSPageSize: true,
-    margin: {
-      top: "1cm",
-      right: "1cm",
-      bottom: "1cm",
-      left: "1cm",
-    },
-    displayHeaderFooter: false,
-    footerTemplate: "<div></div>",
-    headerTemplate: "<div></div>",
-  },
+  pdfDefaults: { format: "A5", printBackground: true },
 };
 
 // Log configuration on load
