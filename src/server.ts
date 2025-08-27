@@ -8,19 +8,10 @@ const app = express();
 // Add request logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  console.log(
-    `[${new Date().toISOString()}] ${req.method} ${req.url} - Request started`
-  );
-
   res.on("finish", () => {
     const duration = Date.now() - start;
-    console.log(
-      `[${new Date().toISOString()}] ${req.method} ${req.url} - ${
-        res.statusCode
-      } (${duration}ms)`
-    );
+    console.log(`${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`);
   });
-
   next();
 });
 
@@ -32,12 +23,7 @@ app.use("/", router);
 
 // Catch-all route for debugging unmatched requests
 app.use((req, res) => {
-  console.log(
-    `[${new Date().toISOString()}] Unmatched route: ${req.method} ${req.url}`
-  );
-  console.log(
-    `[${new Date().toISOString()}] Available routes: /healthz, /test, /render`
-  );
+  console.log(`Unmatched route: ${req.method} ${req.url}`);
   res.status(404).json({
     error: "Route not found",
     message: `No handler found for ${req.method} ${req.url}`,
@@ -47,36 +33,16 @@ app.use((req, res) => {
 
 // Simple shutdown
 process.on("SIGTERM", (): void => {
-  console.log(
-    `[${new Date().toISOString()}] SIGTERM received. Shutting down gracefully...`
-  );
+  console.log("Shutting down...");
   process.exit(0);
 });
 
 process.on("SIGINT", (): void => {
-  console.log(
-    `[${new Date().toISOString()}] SIGINT received. Shutting down gracefully...`
-  );
+  console.log("Shutting down...");
   process.exit(0);
 });
 
 // Start server
 app.listen(config.port, (): void => {
-  console.log(
-    `[${new Date().toISOString()}] PDF Renderer Server started successfully`
-  );
-  console.log(
-    `[${new Date().toISOString()}] Listening on port: ${config.port}`
-  );
-  console.log(
-    `[${new Date().toISOString()}] Environment: ${
-      process.env.NODE_ENV || "development"
-    }`
-  );
-  console.log(
-    `[${new Date().toISOString()}] Max concurrent jobs: ${config.maxConcurrent}`
-  );
-  console.log(
-    `[${new Date().toISOString()}] Page timeout: ${config.pageTimeout}ms`
-  );
+  console.log(`PDF Renderer Server started on port ${config.port}`);
 });
