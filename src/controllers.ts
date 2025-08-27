@@ -64,27 +64,11 @@ export class InvoiceController {
         return;
       }
 
-      // Optimized settings for invoice PDFs
-      const invoiceOptions: Partial<PDFOptions> = {
-        format: "A5",
-        printBackground: true,
-        preferCSSPageSize: true,
-        margin: {
-          top: "0.5cm",
-          right: "0.5cm",
-          bottom: "0.5cm",
-          left: "0.5cm",
-        },
-        displayHeaderFooter: false,
-      };
+      // Use default settings (matches your config)
+      const invoiceOptions: Partial<PDFOptions> = {};
 
       console.log(
-        `[${new Date().toISOString()}] [${requestId}] Adding to queue with options:`,
-        {
-          format: invoiceOptions.format,
-          printBackground: invoiceOptions.printBackground,
-          margin: invoiceOptions.margin,
-        }
+        `[${new Date().toISOString()}] [${requestId}] Adding to queue with default options`
       );
 
       const pdfBuffer = await addToQueue(() => renderPdf(html, invoiceOptions));

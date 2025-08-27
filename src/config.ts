@@ -19,14 +19,11 @@ const config: Config = {
   port: parseInt(process.env.PORT || "8080", 10),
   maxConcurrent: parseInt(process.env.MAX_CONCURRENT || "4", 10),
   pageTimeout: parseInt(process.env.PAGE_TIMEOUT || "45000", 10), // Match client timeout
-  puppeteerArgs: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-gpu",
-    "--disable-software-rasterizer",
-  ],
-  pdfDefaults: { format: "A5", printBackground: true },
+  puppeteerArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+  pdfDefaults: {
+    format: "A5",
+    printBackground: true,
+  },
 };
 
 // Log configuration on load
@@ -38,7 +35,6 @@ console.log(`[${new Date().toISOString()}] Config: Loaded configuration:`, {
   pdfDefaults: {
     format: config.pdfDefaults.format,
     printBackground: config.pdfDefaults.printBackground,
-    margin: config.pdfDefaults.margin,
   },
 });
 

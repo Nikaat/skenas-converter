@@ -5,21 +5,33 @@ export async function renderPdf(
   html: string,
   options: Partial<PDFOptions> = {}
 ): Promise<Uint8Array> {
-  console.log(
-    `[${new Date().toISOString()}] PDF Renderer: Launching browser with args:`,
-    config.puppeteerArgs
-  );
-
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: config.puppeteerArgs,
-  });
-
-  console.log(
-    `[${new Date().toISOString()}] PDF Renderer: Browser launched successfully`
-  );
+  let browser;
 
   try {
+    console.log(
+      `[${new Date().toISOString()}] PDF Renderer: Getting executable path`
+    );
+
+    const executablePath = await puppeteer.executablePath("chrome");
+    console.log(
+      `[${new Date().toISOString()}] PDF Renderer: Chrome executable path: ${executablePath}`
+    );
+
+    console.log(
+      `[${new Date().toISOString()}] PDF Renderer: Launching browser with args:`,
+      config.puppeteerArgs
+    );
+
+    browser = await puppeteer.launch({
+      headless: true,
+      executablePath,
+      args: config.puppeteerArgs,
+    });
+
+    console.log(
+      `[${new Date().toISOString()}] PDF Renderer: Browser launched successfully`
+    );
+
     console.log(
       `[${new Date().toISOString()}] PDF Renderer: Creating new page`
     );
@@ -31,8 +43,7 @@ export async function renderPdf(
       } characters)`
     );
     await page.setContent(html, {
-      waitUntil: "networkidle0",
-      timeout: config.pageTimeout,
+      waitUntil: "load",
     });
     console.log(
       `[${new Date().toISOString()}] PDF Renderer: Page content set successfully`
@@ -44,7 +55,6 @@ export async function renderPdf(
       {
         format: finalOptions.format,
         printBackground: finalOptions.printBackground,
-        margin: finalOptions.margin,
       }
     );
 
@@ -60,8 +70,12 @@ export async function renderPdf(
 
     return pdf;
   } finally {
-    console.log(`[${new Date().toISOString()}] PDF Renderer: Closing browser`);
-    await browser.close();
-    console.log(`[${new Date().toISOString()}] PDF Renderer: Browser closed`);
+    if (browser) {
+      console.log(
+        `[${new Date().toISOString()}] PDF Renderer: Closing browser`
+      );
+      await browser.close();
+      console.log(`[${new Date().toISOString()}] PDF Renderer: Browser closed`);
+    }
   }
 }
