@@ -42,4 +42,17 @@ const config: Config = {
   },
 };
 
+// Log configuration on load
+console.log(`[${new Date().toISOString()}] Config: Loaded configuration:`, {
+  port: config.port,
+  maxConcurrent: config.maxConcurrent,
+  pageTimeout: config.pageTimeout,
+  puppeteerArgs: config.puppeteerArgs,
+  pdfDefaults: {
+    format: config.pdfDefaults.format,
+    printBackground: config.pdfDefaults.printBackground,
+    margin: config.pdfDefaults.margin,
+  },
+});
+
 export default config;
